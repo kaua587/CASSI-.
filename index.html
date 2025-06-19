@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Para Cassi 🌷</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100%;
@@ -14,7 +15,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      font-family: "Segoe UI", sans-serif;
+      font-family: 'Quicksand', sans-serif;
       background-color: #ffeef3;
       background-image: url('https://www.transparenttextures.com/patterns/pink-paper.png');
       color: #3c3c3c;
@@ -28,10 +29,11 @@
       position: relative;
       z-index: 2;
       transition: opacity 0.8s ease;
+      animation: fadeIn 1s ease-in-out;
     }
     .quiz-step {
       display: none;
-      animation: fadeIn 0.5s ease-in-out;
+      animation: slideIn 0.5s ease-in-out;
     }
     .quiz-step.active {
       display: block;
@@ -71,23 +73,16 @@
       pointer-events: none;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
     @keyframes floatUp {
       0% { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
-    }
-    .final {
-      font-size: 1.2em;
-      margin-top: 40px;
-      background: #fff0f5;
-      padding: 24px;
-      border-radius: 20px;
-      text-align: center;
-      line-height: 1.5em;
-      animation: fadeIn 1s ease-in-out;
-      box-shadow: 0 4px 12px rgba(255, 180, 200, 0.2);
     }
     .falling-heart {
       position: fixed;
@@ -144,9 +139,10 @@
       border-radius: 20px;
       box-shadow: 0 4px 12px rgba(255, 180, 200, 0.2);
       text-align: center;
-      font-size: 1.2em;
+      font-size: 1.3em;
       z-index: 2;
-      margin-top: -60px;
+      margin-top: -100px;
+      max-width: 90%;
     }
     @keyframes fadeSlideUp {
       0% { opacity: 0; transform: translateY(20px); }
@@ -195,7 +191,7 @@
         <button data-value="leve">Quando tô rindo sem motivo, leve</button>
       </div>
     </div>
-    <div id="envelopeContainer" style="display:none; text-align:center; margin-top: 10px;">
+    <div id="envelopeContainer" style="display:none; text-align:center; margin-top: 30px;">
       <div class="envelope" onclick="openEnvelope()">
         💌 Você recebeu uma carta...
       </div>
@@ -209,7 +205,6 @@
     const messageText = document.getElementById('messageText');
     let stepIndex = 0;
     let answers = [];
-    let heartsFalling = true;
 
     document.querySelectorAll('.options button').forEach(button => {
       button.addEventListener('click', () => {
@@ -245,20 +240,27 @@
 
     function openEnvelope() {
       document.querySelector('.envelope').classList.add('opened');
-      heartsFalling = false;
+      document.querySelectorAll('.falling-heart').forEach(h => h.remove());
       setTimeout(() => {
         quiz.style.opacity = '0';
         setTimeout(() => {
           quiz.style.display = 'none';
           messageText.innerHTML = getFinalMessage();
           messageText.classList.add('show');
-          const interval = setInterval(createEmojiRise, 400);
-          setTimeout(() => clearInterval(interval), 3000);
+          const interval = setInterval(createEmojiRise, 200);
+          setTimeout(() => clearInterval(interval), 4000);
         }, 1000);
       }, 1000);
     }
 
     function getFinalMessage() {
+      const custom = {
+        'mensagem|lembranca|vulneravel': 'Cassi, cada pedacinho seu que confia e se abre assim, me dá vontade de cuidar, ouvir e nunca esquecer. 💗',
+        'abraco|riso|leve': 'Você, leve e rindo à toa, é minha visão favorita do mundo. Espero sempre te dar motivos pra sorrir. ✨',
+        'escuta|silencio|detalhes': 'Você é feita de sutilezas lindas. E eu amo cada uma delas. 🌷'
+      };
+      const key = answers.join('|');
+      if (custom[key]) return custom[key];
       const mensagens = [
         "Você é um pedacinho de calma no meu dia, Cassi. 💖",
         "Só queria que soubesse que você deixa tudo mais leve. ✨",
@@ -266,6 +268,16 @@
         "Tem algo em você que simplesmente faz o mundo parecer mais bonito. 💌"
       ];
       return mensagens[Math.floor(Math.random() * mensagens.length)];
+    }
+
+    // corações caindo
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('falling-heart');
+      heart.textContent = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(heart);
     }
   </script>
 </body>

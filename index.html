@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Para Cassi 🌷</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100%;
@@ -15,7 +14,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      font-family: 'Quicksand', sans-serif;
+      font-family: "Segoe UI", sans-serif;
       background-color: #ffeef3;
       background-image: url('https://www.transparenttextures.com/patterns/pink-paper.png');
       color: #3c3c3c;
@@ -29,11 +28,10 @@
       position: relative;
       z-index: 2;
       transition: opacity 0.8s ease;
-      animation: fadeIn 1s ease-in-out;
     }
     .quiz-step {
       display: none;
-      animation: slideIn 0.5s ease-in-out;
+      animation: fadeIn 0.5s ease-in-out;
     }
     .quiz-step.active {
       display: block;
@@ -73,16 +71,23 @@
       pointer-events: none;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideIn {
-      from { transform: translateX(-20px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
     }
     @keyframes floatUp {
       0% { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(-40px) scale(1.5); }
+    }
+    .final {
+      font-size: 1.2em;
+      margin-top: 40px;
+      background: #fff0f5;
+      padding: 24px;
+      border-radius: 20px;
+      text-align: center;
+      line-height: 1.5em;
+      animation: fadeIn 1s ease-in-out;
+      box-shadow: 0 4px 12px rgba(255, 180, 200, 0.2);
     }
     .falling-heart {
       position: fixed;
@@ -104,7 +109,7 @@
       border: 2px solid #ffb6c1;
       border-radius: 10px;
       position: relative;
-      margin: 30px auto 10px;
+      margin: 20px auto 0;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(255, 182, 193, 0.4);
       display: flex;
@@ -116,6 +121,13 @@
       transition: transform 0.6s;
       backface-visibility: hidden;
       z-index: 2;
+    }
+    .envelope.fade-in {
+      animation: fadeInEnvelope 1s ease forwards;
+    }
+    @keyframes fadeInEnvelope {
+      0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
     .envelope.opened {
       animation: openEnvelope 1s ease forwards;
@@ -139,14 +151,13 @@
       border-radius: 20px;
       box-shadow: 0 4px 12px rgba(255, 180, 200, 0.2);
       text-align: center;
-      font-size: 1.3em;
+      font-size: 1.2em;
       z-index: 2;
-      margin-top: -100px;
-      max-width: 90%;
+      margin-top: -120px;
     }
     @keyframes fadeSlideUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(-10px); }
+      0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
     .emoji-rise {
       position: fixed;
@@ -167,6 +178,7 @@
     <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_e66cf8f37d.mp3?filename=romantic-piano-loop-121624.mp3" type="audio/mpeg">
   </audio>
   <div id="quiz">
+    <!-- perguntas -->
     <div class="quiz-step active" data-step="1">
       <div class="question">1. O que aquece seu coração de verdade? ✨</div>
       <div class="options">
@@ -191,7 +203,8 @@
         <button data-value="leve">Quando tô rindo sem motivo, leve</button>
       </div>
     </div>
-    <div id="envelopeContainer" style="display:none; text-align:center; margin-top: 30px;">
+    <!-- carta -->
+    <div id="envelopeContainer" style="display:none; text-align:center; margin-top: 20px;">
       <div class="envelope" onclick="openEnvelope()">
         💌 Você recebeu uma carta...
       </div>
@@ -215,6 +228,9 @@
           steps[stepIndex].classList.add('active');
         } else {
           envelopeContainer.style.display = 'block';
+          setTimeout(() => {
+            document.querySelector('.envelope').classList.add('fade-in');
+          }, 50);
         }
         createHeart(button);
       });
@@ -240,14 +256,13 @@
 
     function openEnvelope() {
       document.querySelector('.envelope').classList.add('opened');
-      document.querySelectorAll('.falling-heart').forEach(h => h.remove());
       setTimeout(() => {
         quiz.style.opacity = '0';
         setTimeout(() => {
           quiz.style.display = 'none';
           messageText.innerHTML = getFinalMessage();
           messageText.classList.add('show');
-          const interval = setInterval(createEmojiRise, 200);
+          const interval = setInterval(createEmojiRise, 300);
           setTimeout(() => clearInterval(interval), 4000);
         }, 1000);
       }, 1000);
@@ -268,16 +283,6 @@
         "Tem algo em você que simplesmente faz o mundo parecer mais bonito. 💌"
       ];
       return mensagens[Math.floor(Math.random() * mensagens.length)];
-    }
-
-    // corações caindo
-    for (let i = 0; i < 30; i++) {
-      const heart = document.createElement('div');
-      heart.classList.add('falling-heart');
-      heart.textContent = '💖';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDelay = Math.random() * 5 + 's';
-      document.body.appendChild(heart);
     }
   </script>
 </body>
